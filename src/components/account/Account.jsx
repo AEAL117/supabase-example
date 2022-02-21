@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../../config/supabaseClient';
 import Avatar from "../avatar";
 import Navbar from "../navbar";
+import Reminder from "../reminder";
+//import Reminder from "../reminder";
 
 export default function Account({ session }) {
   const [loading, setLoading] = useState(true)
@@ -10,11 +12,14 @@ export default function Account({ session }) {
   const [website, setWebsite] = useState(null)
   const [avatar_url, setAvatarUrl] = useState(null)
   const [navuser, setNavuser] = useState(null)
+  const [reminders,setReminders]=useState({});
+
 
   useEffect(() => {
     if (avatar_url) downloadImage(avatar_url)
     getProfile()
-  }, [session,avatar_url])
+    getRecordatorios()
+  }, [session, avatar_url])
 
 
   async function downloadImage(path) {
@@ -92,12 +97,38 @@ export default function Account({ session }) {
         <div style={{ width: 150 }}>
           <button className="button primary block">Change Language</button>
         </div>*/
+
+  async function getRecordatorios() {
+    try {
+      setLoading(true)
+      const user = supabase.auth.user()
+
+      let { data, error, status } = await supabase
+        .from('recordatorios')
+        .select(`title, content, reminder`)
+        .eq('user', user.id)
+      
+
+      if (error && status !== 406) {
+        throw error
+      }
+
+      if (data) {
+        setReminders(data);
+        console.log(data);
+      }
+    } catch (error) {
+      alert(error.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <div className="form-widget">
 
       <Navbar usName={username} avatar={navuser} />
       
-
       <Avatar
         url={avatar_url}
         size={150}
@@ -145,6 +176,7 @@ export default function Account({ session }) {
           Sign Out
         </button>
       </div>
+   <Reminder reminders={reminders}/>
     </div>
   )
 }
