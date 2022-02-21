@@ -120,18 +120,18 @@ export default function Account({ session }) {
     } else {
       try {
         console.log(reminderid);
-        console.log(reminderdate);
-        const user = userid
+        console.log(userid.id);
+        //const user = supabase.auth.user()
 
         const updates = {
 
-          user: user.id,
+          user: userid.id,
           title,
           content,
           reminder: reminderdate,
           created_at: new Date(),
         }
-
+        console.log(updates);
         let { error } = await supabase.from('recordatorios').insert(updates, {
           returning: 'minimal', // Don't return the value after inserting
         })
@@ -249,10 +249,11 @@ export default function Account({ session }) {
      
 
       <Navbar usName={username} avatar={navuser} />
+
       <div style={{ width: 150 }}>
         <button className="button primary block"  onClick={() => changeLenguage()} >{i18next.t("lan")}</button>
       </div>
-
+      <a href='https://github.com/AEAL117/supabase-example'>REPO LINK</a>
       <h1>{i18next.t("title1")}</h1>
 
       
