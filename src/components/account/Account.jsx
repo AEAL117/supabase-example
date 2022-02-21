@@ -12,7 +12,7 @@ export default function Account({ session }) {
   const [website, setWebsite] = useState(null)
   const [avatar_url, setAvatarUrl] = useState(null)
   const [navuser, setNavuser] = useState(null)
-  const [reminders,setReminders]=useState({});
+  const [reminders,setReminders]=useState(null);
 
 
   useEffect(() => {
@@ -105,7 +105,7 @@ export default function Account({ session }) {
 
       let { data, error, status } = await supabase
         .from('recordatorios')
-        .select(`title, content, reminder`)
+        .select(`title, content, reminder, id`)
         .eq('user', user.id)
       
 
@@ -115,6 +115,7 @@ export default function Account({ session }) {
 
       if (data) {
         setReminders(data);
+        
         console.log(data);
       }
     } catch (error) {
@@ -176,7 +177,7 @@ export default function Account({ session }) {
           Sign Out
         </button>
       </div>
-   <Reminder reminders={reminders}/>
+   {reminders===null ? "":<Reminder reminders={reminders}/>} 
     </div>
   )
 }
