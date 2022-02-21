@@ -4,7 +4,6 @@ import { supabase } from '../../config/supabaseClient';
 import Avatar from "../avatar";
 import Navbar from "../navbar";
 import Reminder from "../reminder";
-import LanguageDetector from "i18next-browser-languagedetector";
 
 export default function Account({ session }) {
   const [loading, setLoading] = useState(true)
@@ -13,7 +12,7 @@ export default function Account({ session }) {
   const [avatar_url, setAvatarUrl] = useState(null)
   const [navuser, setNavuser] = useState(null)
   const [reminders, setReminders] = useState(null);
-  const [userid, setUserid] = useState(supabase.auth.user());
+  const [userid] = useState(supabase.auth.user());
   const [title, setTitle] = useState(null);
   const [content, setContent] = useState(null);
   const [reminderdate, setReminderdate] = useState(new Date());
@@ -70,7 +69,7 @@ export default function Account({ session }) {
 
   async function deleteReminderById() {
     try {
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('recordatorios')
         .delete()
         .eq('id', reminderid)
@@ -115,7 +114,7 @@ export default function Account({ session }) {
   }
 
   async function insertReminder({ title, content, reminder }) {
-    if (reminderid != null && reminderid != "") {
+    if (reminderid !== null && reminderid !== "") {
       updateReminder();
       //console.log(reminderid);
     } else {
@@ -326,9 +325,9 @@ export default function Account({ session }) {
         className="button block primary"
         onClick={() => insertReminder({ title, content, reminderdate })}
       >
-        {reminderid != null && reminderid != "" ? i18next.t("button5v2") : i18next.t("button5")}
+        {reminderid !== null && reminderid !== "" ? i18next.t("button5v2") : i18next.t("button5")}
       </button>
-      {reminderid != null && reminderid != "" ? <button
+      {reminderid !== null && reminderid !== "" ? <button
         className="button block primary"
         onClick={() => deleteReminderById()}
       >
