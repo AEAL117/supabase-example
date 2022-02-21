@@ -245,7 +245,7 @@ export default function Account({ session }) {
     <div className="form-widget">
 
       <Navbar usName={username} avatar={navuser} />
-      <h1>UPDATE PROFILE</h1>
+      <h1>{i18next.t("title1")}</h1>
       <Avatar
         url={avatar_url}
         size={150}
@@ -256,11 +256,11 @@ export default function Account({ session }) {
       />
 
       <div>
-        <label htmlFor="email">Email</label>
+        <label htmlFor="email">{i18next.t("field1")}</label>
         <input id="email" type="text" value={session.user.email} disabled />
       </div>
       <div>
-        <label htmlFor="username">Name</label>
+        <label htmlFor="username">{i18next.t("field2")}</label>
         <input
           id="username"
           type="text"
@@ -269,7 +269,7 @@ export default function Account({ session }) {
         />
       </div>
       <div>
-        <label htmlFor="website">Website</label>
+        <label htmlFor="website">{i18next.t("field3")}</label>
         <input
           id="website"
           type="website"
@@ -284,43 +284,43 @@ export default function Account({ session }) {
           onClick={() => updateProfile({ username, website, avatar_url })}
           disabled={loading}
         >
-          {loading ? 'Loading ...' : 'Update'}
+          {loading ? 'Loading ...' : i18next.t("button2")}
         </button>
       </div>
 
       <div>
         <button className="button block" onClick={() => supabase.auth.signOut()}>
-          Sign Out
+        {i18next.t("button3")}
         </button>
       </div>
       {reminders === null ? "" : <Reminder reminders={reminders} userid={userid.id} />}
       <div style={{ width: 150 }}>
-        <button className="button primary block" onClick={() => getReminder()}>Find by Id</button>
+        <button className="button primary block" onClick={() => getReminder()}>{i18next.t("button4")}</button>
         <input id="content" type="text" onChange={(e) => setReminderid(e.target.value)} />
       </div>
       <div>
-        <label htmlFor="title">Tittle</label>
+        <label htmlFor="title">{i18next.t("field4")}</label>
         <input id="title" type="text" value={title || ''} onChange={(e) => setTitle(e.target.value)} />
       </div>
       <div>
-        <label htmlFor="content">Content</label>
+        <label htmlFor="content">{i18next.t("field5")}</label>
         <input id="content" type="text" value={content || ''} onChange={(e) => setContent(e.target.value)} />
       </div>
       <div>
-        <label htmlFor="reminderdate">Reminder at</label>
+        <label htmlFor="reminderdate">{i18next.t("field6")}</label>
         <input id="reminderdate" type="date" value={reminderdate} onChange={(e) => setReminderdate(e.target.value)} />
       </div>
       <button
         className="button block primary"
         onClick={() => insertReminder({ title, content, reminderdate })}
       >
-        {reminderid != null && reminderid != "" ? "GUARDAR CAMBIOS":"NUEVO REGISTRO"}
+        {reminderid != null && reminderid != "" ? i18next.t("button5v2"):i18next.t("button5")}
       </button>
       {reminderid != null && reminderid != "" ? <button
         className="button block primary"
         onClick={() => deleteReminderById()}
       >
-        BORRAR
+        {i18next.t("button6")}
       </button> : ""}
     </div>
   )

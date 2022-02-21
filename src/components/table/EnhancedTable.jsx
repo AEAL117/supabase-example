@@ -22,7 +22,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import { useState, useEffect } from 'react';
-
+import i18next from '../../config/localization/i18n';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -65,19 +65,19 @@ const headCells = [
     id: 'title',
     numeric: false,
     disablePadding: false,
-    label: 'Titulo',
+    label: i18next.t("heaer1"),
   },
   {
     id: 'content',
     numeric: false,
     disablePadding: true,
-    label: 'Contenido',
+    label: i18next.t("header2"),
   },
   {
     id: 'reminder',
     numeric: false,
     disablePadding: true,
-    label: 'Recordatorio',
+    label: i18next.t("header3"),
   }
 ];
 
@@ -167,7 +167,7 @@ const EnhancedTableToolbar = (props) => {
           id="tableTitle"
           component="div"
         >
-          Reminders
+          {i18next.t("titletable")}
         </Typography>
       )}
 
@@ -341,7 +341,7 @@ export default function EnhancedTable({rows}) {
       </Paper>
       <FormControlLabel
         control={<Switch checked={dense} onChange={handleChangeDense} />}
-        label="Dense padding"
+        label={i18next.t("padding")}
       />
     </Box>
   );

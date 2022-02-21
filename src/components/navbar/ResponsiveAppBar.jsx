@@ -11,8 +11,9 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
+import i18next from '../../config/localization/i18n';
 
-const pages = ['Home', 'Update Profile'];
+const pages = [i18next.t("menu1"), i18next.t("menu2")];
 const settings = [];
 
 const ResponsiveAppBar = ({usName,avatar}) => {

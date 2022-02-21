@@ -1,5 +1,28 @@
 {
-    "welcome":"Bienvenidos a la app",
-    "name":"Mi nombre es",
-    "another":"Otra cosa"
+
+    "menu1":"Inicio",
+    "menu2":"Actualizar Perfil",
+    "title1":"ACTUALIZAR PERFIL",
+    "button1":"Subir",
+    "field1":"Correo",
+    "field2":"Nombre",
+    "field3":"Sitio web",
+    "button2":"Actualizar",
+    "button3":"Cerrar Sesión",
+    "title2":"INICIO",
+    "paragraph1":"Para utilizar el crud, se deben tomar las siguientes recomendaciones: para insertar un nuevo registro el campo de 'Buscar por ID' debe estar vacío no ' ' debe estar totalmente vacío, y dar clic en nuevo registro, para buscar se buscará por ID y se dará clic en 'Buscar por ID', si este encuentra datos con el ID proporcionado estos se asignaran a sus campos correspondientes y podrás modificar la información dando clic en el botón Guardar cambios, si lo que quieres es borrar solo busca por ID y se habilitara el botón de borrar.",
+    "titletable":"Recordatorios",
+    "heaer1":"Título",
+    "header2":"Contenido",
+    "header3":"Fecha de recordatorio",
+    "footertable":"Filas por pagina: ",
+    "padding":"Espaciado denso",
+    "button4":"Buscar por ID",
+    "field4":"Título",
+    "field5":"Contenido",
+    "field6":"Fecha para recordar",
+    "button5":"Insertar Nuevo",
+    "button5v2":"Guardar Cambios",
+    "button6":"Eliminar Registro"
+
 }
