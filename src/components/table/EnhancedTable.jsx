@@ -56,21 +56,27 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
-    id: 'name',
+    id: 'id',
     numeric: false,
     disablePadding: true,
+    label: 'ID',
+  },
+  {
+    id: 'title',
+    numeric: false,
+    disablePadding: false,
     label: 'Titulo',
   },
   {
-    id: 'calories',
-    numeric: true,
-    disablePadding: false,
+    id: 'content',
+    numeric: false,
+    disablePadding: true,
     label: 'Contenido',
   },
   {
-    id: 'fat',
-    numeric: true,
-    disablePadding: false,
+    id: 'reminder',
+    numeric: false,
+    disablePadding: true,
     label: 'Recordatorio',
   }
 ];
@@ -195,7 +201,7 @@ export default function EnhancedTable({rows}) {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   //console.log(remainders);
  // const [rows,setRows]=useState(remainders);
-  console.log(rows);
+  //console.log(rows);
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -302,10 +308,11 @@ export default function EnhancedTable({rows}) {
                         scope="row"
                         padding="none"
                       >
-                        {row.title}
+                        {row.id}
                       </TableCell>
-                      <TableCell align="right">{row.content}</TableCell>
-                      <TableCell align="right">{row.reminder}</TableCell>
+                      <TableCell align="left">{row.title}</TableCell>
+                      <TableCell align="left">{row.content}</TableCell>
+                      <TableCell align="left">{row.reminder}</TableCell>
                       
                     </TableRow>
                   );

@@ -12,14 +12,19 @@ export default function Account({ session }) {
   const [website, setWebsite] = useState(null)
   const [avatar_url, setAvatarUrl] = useState(null)
   const [navuser, setNavuser] = useState(null)
-  const [reminders,setReminders]=useState(null);
-  const [userid,setUserid]=useState(supabase.auth.user());
-
+  const [reminders, setReminders] = useState(null);
+  const [userid, setUserid] = useState(supabase.auth.user());
+  const [title, setTitle] = useState(null);
+  const [content, setContent] = useState(null);
+  const [reminderdate, setReminderdate] = useState(new Date());
+  const [issubmited, serIssubmited] = useState(false);
+  const [reminderid, setReminderid] = useState(null);
   useEffect(() => {
     if (avatar_url) downloadImage(avatar_url)
     getProfile()
     getRecordatorios()
-  }, [session, avatar_url])
+    //console.log(issubmited);
+  }, [session, avatar_url, issubmited])
 
 
   async function downloadImage(path) {
@@ -31,7 +36,7 @@ export default function Account({ session }) {
       const url = URL.createObjectURL(data)
       setNavuser(url);
 
-      console.log(url);
+      //console.log(url);
     } catch (error) {
       console.log('Error downloading image: ', error.message)
     }
@@ -63,6 +68,25 @@ export default function Account({ session }) {
     }
   }
 
+  async function deleteReminderById() {
+    try {
+      const { data, error } = await supabase
+        .from('recordatorios')
+        .delete()
+        .eq('id', reminderid)
+      if (error) {
+        throw error
+      } else {
+        serIssubmited(true);
+      }
+    } catch (error) {
+      alert(error.message)
+    } finally {
+      serIssubmited(false);
+    }
+  }
+
+
   async function updateProfile({ username, website, avatar_url }) {
     try {
       setLoading(true)
@@ -89,6 +113,73 @@ export default function Account({ session }) {
       setLoading(false)
     }
   }
+
+  async function insertReminder({ title, content, reminder }) {
+    if (reminderid != null && reminderid != "") {
+      updateReminder();
+      //console.log(reminderid);
+    } else {
+      try {
+        console.log(reminderid);
+        console.log(reminderdate);
+        const user = userid
+
+        const updates = {
+
+          user: user.id,
+          title,
+          content,
+          reminder: reminderdate,
+          created_at: new Date(),
+        }
+
+        let { error } = await supabase.from('recordatorios').insert(updates, {
+          returning: 'minimal', // Don't return the value after inserting
+        })
+
+        if (error) {
+          throw error
+        } else {
+          serIssubmited(true);
+        }
+      } catch (error) {
+        alert(error.message)
+      } finally {
+        serIssubmited(false);
+      }
+    }
+
+  }
+
+  async function updateReminder() {
+    try {
+
+      const user = userid
+
+      const updates = {
+        id: reminderid,
+        user: user.id,
+        title: title,
+        content: content,
+        reminder: reminderdate,
+        created_at: new Date(),
+      }
+
+      let { error } = await supabase.from('recordatorios').upsert(updates, {
+        returning: 'minimal', // Don't return the value after inserting
+      })
+
+      if (error) {
+        throw error
+      } else {
+        serIssubmited(true);
+      }
+    } catch (error) {
+      alert(error.message)
+    } finally {
+      serIssubmited(false);
+    }
+  }
   //<p>{i18next.t("welcome")}</p>
   //<p>{i18next.t("name")}</p>
   //<p>{i18next.t("another")}</p>
@@ -107,7 +198,7 @@ export default function Account({ session }) {
         .from('recordatorios')
         .select(`title, content, reminder, id`)
         .eq('user', user.id)
-      
+
 
       if (error && status !== 406) {
         throw error
@@ -115,8 +206,8 @@ export default function Account({ session }) {
 
       if (data) {
         setReminders(data);
-        
-        console.log(data);
+
+        // console.log(data);
       }
     } catch (error) {
       alert(error.message)
@@ -125,11 +216,36 @@ export default function Account({ session }) {
     }
   }
 
+  async function getReminder() {
+    try {
+
+      let { data, error, status } = await supabase
+        .from('recordatorios')
+        .select(`title, content, reminder`)
+        .eq('id', reminderid)
+        .single()
+
+      if (error && status !== 406) {
+        throw error
+      }
+
+      if (data) {
+        setTitle(data.title);
+        setContent(data.content);
+        setReminderdate(data.reminder);
+      }
+    } catch (error) {
+      alert(error.message)
+    } finally {
+
+    }
+  }
+
   return (
     <div className="form-widget">
 
       <Navbar usName={username} avatar={navuser} />
-      <h1>UPDATE PROFILE</h1>  
+      <h1>UPDATE PROFILE</h1>
       <Avatar
         url={avatar_url}
         size={150}
@@ -138,7 +254,7 @@ export default function Account({ session }) {
           updateProfile({ username, website, avatar_url: url })
         }}
       />
-     
+
       <div>
         <label htmlFor="email">Email</label>
         <input id="email" type="text" value={session.user.email} disabled />
@@ -177,7 +293,35 @@ export default function Account({ session }) {
           Sign Out
         </button>
       </div>
-   {reminders===null ? "":<Reminder reminders={reminders} userid={userid.id}/>} 
+      {reminders === null ? "" : <Reminder reminders={reminders} userid={userid.id} />}
+      <div style={{ width: 150 }}>
+        <button className="button primary block" onClick={() => getReminder()}>Find by Id</button>
+        <input id="content" type="text" onChange={(e) => setReminderid(e.target.value)} />
+      </div>
+      <div>
+        <label htmlFor="title">Tittle</label>
+        <input id="title" type="text" value={title || ''} onChange={(e) => setTitle(e.target.value)} />
+      </div>
+      <div>
+        <label htmlFor="content">Content</label>
+        <input id="content" type="text" value={content || ''} onChange={(e) => setContent(e.target.value)} />
+      </div>
+      <div>
+        <label htmlFor="reminderdate">Reminder at</label>
+        <input id="reminderdate" type="date" value={reminderdate} onChange={(e) => setReminderdate(e.target.value)} />
+      </div>
+      <button
+        className="button block primary"
+        onClick={() => insertReminder({ title, content, reminderdate })}
+      >
+        {reminderid != null && reminderid != "" ? "GUARDAR CAMBIOS":"NUEVO REGISTRO"}
+      </button>
+      {reminderid != null && reminderid != "" ? <button
+        className="button block primary"
+        onClick={() => deleteReminderById()}
+      >
+        BORRAR
+      </button> : ""}
     </div>
   )
 }
