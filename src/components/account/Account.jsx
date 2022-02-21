@@ -1,18 +1,36 @@
 import i18next from '../../config/localization/i18n';
-import { useState, useEffect } from 'react'
-import { supabase } from '../../config/supabaseClient'
-import Avatar from "../avatar"
+import { useState, useEffect } from 'react';
+import { supabase } from '../../config/supabaseClient';
+import Avatar from "../avatar";
+import Navbar from "../navbar";
 
 export default function Account({ session }) {
   const [loading, setLoading] = useState(true)
   const [username, setUsername] = useState(null)
   const [website, setWebsite] = useState(null)
   const [avatar_url, setAvatarUrl] = useState(null)
+  const [navuser, setNavuser] = useState(null)
 
   useEffect(() => {
+    if (avatar_url) downloadImage(avatar_url)
     getProfile()
-  }, [session])
+  }, [session,avatar_url])
 
+
+  async function downloadImage(path) {
+    try {
+      const { data, error } = await supabase.storage.from('avatars').download(path)
+      if (error) {
+        throw error
+      }
+      const url = URL.createObjectURL(data)
+      setNavuser(url);
+
+      console.log(url);
+    } catch (error) {
+      console.log('Error downloading image: ', error.message)
+    }
+  }
   async function getProfile() {
     try {
       setLoading(true)
@@ -66,20 +84,29 @@ export default function Account({ session }) {
       setLoading(false)
     }
   }
-
+  //<p>{i18next.t("welcome")}</p>
+  //<p>{i18next.t("name")}</p>
+  //<p>{i18next.t("another")}</p>
+  //<p>{username}</p>
+  /*
+        <div style={{ width: 150 }}>
+          <button className="button primary block">Change Language</button>
+        </div>*/
   return (
     <div className="form-widget">
-      <p>{i18next.t("welcome")}</p>
-      <p>{i18next.t("name")}</p>
-      <p>{i18next.t("another")}</p>
+
+      <Navbar usName={username} avatar={navuser} />
+      
+
       <Avatar
-      url={avatar_url}
-      size={150}
-      onUpload={(url) => {
-        setAvatarUrl(url)
-        updateProfile({ username, website, avatar_url: url })
-      }}
-    />
+        url={avatar_url}
+        size={150}
+        onUpload={(url) => {
+          setAvatarUrl(url)
+          updateProfile({ username, website, avatar_url: url })
+        }}
+      />
+
       <div>
         <label htmlFor="email">Email</label>
         <input id="email" type="text" value={session.user.email} disabled />
