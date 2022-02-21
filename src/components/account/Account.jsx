@@ -4,7 +4,7 @@ import { supabase } from '../../config/supabaseClient';
 import Avatar from "../avatar";
 import Navbar from "../navbar";
 import Reminder from "../reminder";
-
+import LanguageDetector from "i18next-browser-languagedetector";
 
 export default function Account({ session }) {
   const [loading, setLoading] = useState(true)
@@ -184,10 +184,8 @@ export default function Account({ session }) {
   //<p>{i18next.t("name")}</p>
   //<p>{i18next.t("another")}</p>
   //<p>{username}</p>
-  /*
-        <div style={{ width: 150 }}>
-          <button className="button primary block">Change Language</button>
-        </div>*/
+
+
 
   async function getRecordatorios() {
     try {
@@ -241,11 +239,24 @@ export default function Account({ session }) {
     }
   }
 
+  function changeLenguage(){
+    let actual=localStorage.getItem('i18nextLng')
+    localStorage.setItem('i18nextLng', actual==="es" ? "en":"es");
+    window.location.reload(false);
+  }
+
   return (
     <div className="form-widget">
+     
 
       <Navbar usName={username} avatar={navuser} />
+      <div style={{ width: 150 }}>
+        <button className="button primary block"  onClick={() => changeLenguage()} >{i18next.t("lan")}</button>
+      </div>
+
       <h1>{i18next.t("title1")}</h1>
+
+      
       <Avatar
         url={avatar_url}
         size={150}
@@ -255,6 +266,7 @@ export default function Account({ session }) {
         }}
       />
 
+    
       <div>
         <label htmlFor="email">{i18next.t("field1")}</label>
         <input id="email" type="text" value={session.user.email} disabled />
@@ -290,7 +302,7 @@ export default function Account({ session }) {
 
       <div>
         <button className="button block" onClick={() => supabase.auth.signOut()}>
-        {i18next.t("button3")}
+          {i18next.t("button3")}
         </button>
       </div>
       {reminders === null ? "" : <Reminder reminders={reminders} userid={userid.id} />}
@@ -314,7 +326,7 @@ export default function Account({ session }) {
         className="button block primary"
         onClick={() => insertReminder({ title, content, reminderdate })}
       >
-        {reminderid != null && reminderid != "" ? i18next.t("button5v2"):i18next.t("button5")}
+        {reminderid != null && reminderid != "" ? i18next.t("button5v2") : i18next.t("button5")}
       </button>
       {reminderid != null && reminderid != "" ? <button
         className="button block primary"
