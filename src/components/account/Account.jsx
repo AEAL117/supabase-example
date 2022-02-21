@@ -4,7 +4,7 @@ import { supabase } from '../../config/supabaseClient';
 import Avatar from "../avatar";
 import Navbar from "../navbar";
 import Reminder from "../reminder";
-//import Reminder from "../reminder";
+
 
 export default function Account({ session }) {
   const [loading, setLoading] = useState(true)
@@ -13,7 +13,7 @@ export default function Account({ session }) {
   const [avatar_url, setAvatarUrl] = useState(null)
   const [navuser, setNavuser] = useState(null)
   const [reminders,setReminders]=useState(null);
-
+  const [userid,setUserid]=useState(supabase.auth.user());
 
   useEffect(() => {
     if (avatar_url) downloadImage(avatar_url)
@@ -129,7 +129,7 @@ export default function Account({ session }) {
     <div className="form-widget">
 
       <Navbar usName={username} avatar={navuser} />
-      
+      <h1>UPDATE PROFILE</h1>  
       <Avatar
         url={avatar_url}
         size={150}
@@ -138,7 +138,7 @@ export default function Account({ session }) {
           updateProfile({ username, website, avatar_url: url })
         }}
       />
-
+     
       <div>
         <label htmlFor="email">Email</label>
         <input id="email" type="text" value={session.user.email} disabled />
@@ -177,7 +177,7 @@ export default function Account({ session }) {
           Sign Out
         </button>
       </div>
-   {reminders===null ? "":<Reminder reminders={reminders}/>} 
+   {reminders===null ? "":<Reminder reminders={reminders} userid={userid.id}/>} 
     </div>
   )
 }
