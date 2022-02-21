@@ -1,6 +1,8 @@
+import i18next from '../../config/localization/i18n';
 import { useState, useEffect } from 'react'
 import { supabase } from '../../config/supabaseClient'
 import Avatar from "../avatar"
+
 export default function Account({ session }) {
   const [loading, setLoading] = useState(true)
   const [username, setUsername] = useState(null)
@@ -67,6 +69,9 @@ export default function Account({ session }) {
 
   return (
     <div className="form-widget">
+      <p>{i18next.t("welcome")}</p>
+      <p>{i18next.t("name")}</p>
+      <p>{i18next.t("another")}</p>
       <Avatar
       url={avatar_url}
       size={150}

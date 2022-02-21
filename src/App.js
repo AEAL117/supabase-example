@@ -4,6 +4,7 @@ import { supabase } from './config/supabaseClient'
 import Auth from './components/auth'
 import Account from './components/account'
 
+
 export default function Home() {
   const [session, setSession] = useState(null)
 
